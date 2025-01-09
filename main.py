@@ -9,6 +9,7 @@ product_list = [ products.Product("MacBook Air M2", price=1450, quantity=100),
 best_buy = store.Store(product_list)
 
 def start(best_buy):
+    """ Main function that displays and handles user interface"""
     print("Store Menu\n -----")
     while True:
         print(f"\n1. List all products in store"
@@ -35,8 +36,9 @@ def start(best_buy):
                     print(f"{counter}. {product.show()}")
             print("-----")
             print ("When you want to finish order, enter empty text.")
-            print("Which product # do you want?")
+
             while True:
+                print("Which product # do you want?")
                 product_number = input()
                 if not product_number.strip():
                     break
@@ -45,7 +47,7 @@ def start(best_buy):
                     product_index = integer_product - 1
                     product = best_buy.get_all_products()[product_index]
                 except (ValueError, IndexError):
-                    print("Please enter a number.")
+                    print("Please enter a number between 1 and 3.")
                     continue
 
                 print("How many do you want?")
@@ -53,13 +55,14 @@ def start(best_buy):
                     try:
                         quantity = int(input())
                         if quantity <= 0:
-                            print("Please enter a number higher than 0.")
+                            print("Please enter a number between 1 and 3.")
+                            continue
                         break
                     except ValueError:
-                        print("Please enter a number.")
+                        print("Please enter a number between 1 and 3.")
                 shopping_list.append((product, quantity))
+                print(f"Added {quantity} of {product.name} to your shopping list.")
             print(f"The total cost is {product.buy(quantity)} dollars.")
-            print()
         elif user_input == "4":
             print("Thank you for shopping with us!")
             break
