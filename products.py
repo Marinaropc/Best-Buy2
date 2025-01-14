@@ -75,8 +75,10 @@ class Product:
         if quantity > self.quantity:
             raise ValueError("Not enough quantity.")
         self.quantity -= quantity
+
         if self.quantity == 0:
             self.deactivate()
+
         total_price = float(self.price * quantity)
         return total_price
 

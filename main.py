@@ -68,7 +68,6 @@ def make_order(best_buy):
         print("How many do you want?")
 
         while True:
-
             try:
                 quantity = int(input())
                 if quantity <= 0:
@@ -105,6 +104,7 @@ def main():
         "3": lambda: make_order(best_buy),
         "4": quit_program
     }
+
     while True:
         user_choice = user_input()
         if user_choice in dispatch:
