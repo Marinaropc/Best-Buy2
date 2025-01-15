@@ -89,16 +89,28 @@ class NonStockedProduct(Product):
 
 
     def __init__(self, name, price):
+        """ Initializes a non-stocked product with a name, price, and quantity.
+        Args:
+            name (str): Name of the product.
+            price (float): Price of the product.
+        """
         super().__init__(name, price, quantity = 0)
         self.active = True
 
 
     def set_quantity(self, quantity):
+        """ Sets the quantity of the product. """
         if quantity != 0:
             raise ValueError("Cannot set quantity to non-zero value.")
 
 
     def buy(self, quantity):
+        """ Buys the product.
+        Args:
+            quantity (int): Quantity to buy.
+        Returns:
+            float: Total price of the order.
+        """
         if quantity <= 0:
             raise ValueError("Quantity must be positive.")
         total_price = float(self.price * quantity)
@@ -108,16 +120,30 @@ class NonStockedProduct(Product):
 class LimitedProduct(Product):
 
     def __init__(self, name, price, quantity, maximum):
+        """ Initializes a limited product with a name, price, and quantity.
+        Args:
+            name (str): Name of the product.
+            price (float): Price of the product.
+            quantity (int): Quantity of the product.
+            maximum (int): Maximum quantity of the product.
+        """
         super().__init__(name, price, quantity)
         self.maximum = maximum
         self.active = True
 
 
     def set_quantity(self, quantity):
+        """ Sets the quantity of the product. """
         self.quantity = quantity
 
 
     def buy(self, quantity):
+        """ Buys the product.
+        Args:
+            quantity (int): Quantity to buy.
+        Returns:
+            float: Total price of the order.
+        """
         if quantity > 1:
             raise ValueError("Quantity cannot be higher than 1.")
         total_price = float(self.price * quantity)
