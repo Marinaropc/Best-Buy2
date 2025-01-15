@@ -1,3 +1,5 @@
+from threading import activeCount
+
 
 class Product:
 
@@ -82,3 +84,41 @@ class Product:
         total_price = float(self.price * quantity)
         return total_price
 
+
+class NonStockedProduct(Product):
+
+
+    def __init__(self, name, price):
+        super().__init__(name, price, quantity = 0)
+        self.active = True
+
+
+    def set_quantity(self, quantity):
+        if quantity != 0:
+            raise ValueError("Cannot set quantity to non-zero value.")
+
+
+    def buy(self, quantity):
+        if quantity <= 0:
+            raise ValueError("Quantity must be positive.")
+        total_price = float(self.price * quantity)
+        return total_price
+
+
+class LimitedProduct(Product):
+
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+        self.active = True
+
+
+    def set_quantity(self, quantity):
+        self.quantity = quantity
+
+
+    def buy(self, quantity):
+        if quantity > 1:
+            raise ValueError("Quantity cannot be higher than 1.")
+        total_price = float(self.price * quantity)
+        return total_price

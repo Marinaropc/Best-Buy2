@@ -1,12 +1,15 @@
 import products
 import store
 
+
 # setup initial stock of inventory
 product_list = [ products.Product("MacBook Air M2", price=1450, quantity=100),
                  products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                 products.Product("Google Pixel 7", price=500, quantity=250)
+                 products.Product("Google Pixel 7", price=500, quantity=250),
+                 products.NonStockedProduct("Windows License", price=125),
+                 products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
                ]
-
+best_buy = store.Store(product_list)
 
 def user_input():
     """ Displays and handles user interface, returns user choice."""
@@ -66,23 +69,45 @@ def make_order(best_buy):
             continue
 
         print("How many do you want?")
-
-        while True:
-            try:
-                quantity = int(input())
-                if quantity <= 0:
+        if isinstance(product, products.NonStockedProduct):
+            while True:
+                try:
+                    quantity = int(input())
+                    if quantity > 0:
+                        break
+                    if quantity <= 0:
+                        print("Please enter a number higher than 0.")
+                except ValueError:
                     print("Please enter a number higher than 0.")
-                    continue
-                break
-            except ValueError:
-                print("Please enter a number higher than 0.")
-
-        if quantity > product.get_quantity():
-            print("Please enter a number lower than the quantity available.")
-            continue
+        elif isinstance(product, products.LimitedProduct):
+            while True:
+                try:
+                    quantity = int(input())
+                    if quantity <= 0:
+                        print("Please enter a number higher than 0.")
+                        continue
+                    if quantity > product.maximum:
+                        print("Please enter a number lower than the maximum amount per purchase.")
+                        continue
+                    break
+                except ValueError:
+                    print("Please enter a number higher than 0.")
         else:
-            shopping_list.append((product, quantity))
-            print(f"Added {quantity} of {product.name} to your shopping list.")
+            while True:
+                try:
+                    quantity = int(input())
+                    if quantity <= 0:
+                        print("Please enter a number higher than 0.")
+                        continue
+                    if quantity > product.get_quantity():
+                        print("Please enter a number lower than the quantity available.")
+                        continue
+                    break
+                except ValueError:
+                    print("Please enter a number higher than 0.")
+
+        shopping_list.append((product, quantity))
+        print(f"Added {quantity} of {product.name} to your shopping list.")
 
     total_cost = 0
     for item, quantity in shopping_list:
