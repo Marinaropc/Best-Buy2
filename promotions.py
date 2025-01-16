@@ -1,6 +1,4 @@
-import products
-import store
-import main
+
 
 class Promotion:
 
@@ -30,15 +28,6 @@ class Promotion:
     def deactivate(self):
         """ Deactivates the promotion """
         self.active = False
-
-
-    def apply_discount(self, product, quantity):
-        """ Applies the promotion to a product.
-        Args:
-            product (Product): Product to apply the promotion to.
-            quantity (int): Quantity of the product.
-        """
-        pass
 
 
 class SecondHalfPrice(Promotion):
@@ -102,6 +91,8 @@ class PercentDiscount(Promotion):
             name (str): Name of the promotion.
             percent (int): Percent of the discount.
         """
+        if not (0 <= percent <= 100):
+            raise ValueError("percentage must be between 0 and 100")
         super().__init__(name)
         self.percent = percent
 
@@ -111,11 +102,10 @@ class PercentDiscount(Promotion):
         Args:
             product (Product): Product to apply the promotion to.
             quantity (int): Quantity of the product.
-            percent (float): Percentage to discount.
         Returns:
             float: total_price
         """
         full_price = product.price * quantity
-        discount = (full_price * self.percent)/100
+        discount = (full_price * self.percent) / 100
         total_price = full_price - discount
         return total_price

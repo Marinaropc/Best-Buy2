@@ -13,13 +13,13 @@ product_list = [ products.Product("MacBook Air M2", price=1450, quantity=100),
 # Create promotion catalog
 second_half_price = promotions.SecondHalfPrice("Second Half price!")
 third_one_free = promotions.ThirdOneFree("Third One Free!")
-thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
+thirty_percent = promotions.PercentDiscount("30% off!", 30)
 
 # Add promotions to products
 product_list[0].set_promotion(second_half_price)
 product_list[1].set_promotion(third_one_free)
 product_list[3].set_promotion(thirty_percent)
-
+product_list[2].set_promotion(thirty_percent)
 # Initialize store
 best_buy = store.Store(product_list)
 
@@ -53,13 +53,13 @@ def show_total_quantity(best_buy):
 def make_order(best_buy):
     """ Displays the buying menu, and handles user input for making an order."""
 
+    active_products = [product for product in
+                       best_buy.get_all_products() if product.is_active()]
     shopping_list = []
-    counter = 0
 
-    for product in best_buy.get_all_products():
+    for index, product in enumerate(active_products):
         if product.is_active():
-            counter += 1
-            print(f"{counter}. {product.show()}")
+            print(f"{index+1}. {product.show()}")
 
     print("-----")
     print ("When you want to finish order, enter an empty text.")
@@ -74,6 +74,9 @@ def make_order(best_buy):
 
         try:
             integer_product = int(product_number)
+            if integer_product <= 0:
+                print("Please enter a number higher than 0.")
+                continue
             product_index = integer_product - 1
             product = best_buy.get_all_products()[product_index]
         except (ValueError, IndexError):
@@ -81,45 +84,46 @@ def make_order(best_buy):
             continue
 
         print("How many do you want?")
-        if isinstance(product, products.NonStockedProduct):
-            while True:
-                try:
-                    quantity = int(input())
-                    if quantity > 0:
-                        break
-                    if quantity <= 0:
-                        print("Please enter a number higher than 0.")
-                except ValueError:
-                    print("Please enter a number higher than 0.")
-        elif isinstance(product, products.LimitedProduct):
-            while True:
-                try:
-                    quantity = int(input())
-                    if quantity <= 0:
-                        print("Please enter a number higher than 0.")
-                        continue
-                    if quantity > product.maximum:
-                        print("Please enter a number lower than the maximum amount per purchase.")
-                        continue
+        while True:
+            try:
+                string_quantity = input()
+                if not string_quantity.strip():
                     break
-                except ValueError:
-                    print("Please enter a number higher than 0.")
-        else:
-            while True:
-                try:
-                    quantity = int(input())
-                    if quantity <= 0:
-                        print("Please enter a number higher than 0.")
-                        continue
-                    if quantity > product.get_quantity():
+
+                quantity = int(string_quantity)
+
+                if quantity <= 0:
+                    print("Please enter an integer number higher than 0.")
+                    continue
+
+                if (isinstance(product, products.LimitedProduct)
+                        and quantity > product.get_maximum()):
+                    print("Please enter a number lower "
+                          "than the maximum amount per purchase.")
+                    continue
+
+                if not isinstance(product, products.NonStockedProduct):
+                    available_stock = product.get_quantity()
+                    already_ordered = sum(q for p, q in shopping_list if p == product)
+
+                    remaining_stock = available_stock - already_ordered
+
+                    if remaining_stock <= 0:
+                        print("Sorry, this product is sold out.")
+                        break
+
+                    if quantity > remaining_stock:
                         print("Please enter a number lower than the quantity available.")
                         continue
-                    break
-                except ValueError:
-                    print("Please enter a number higher than 0.")
+                    elif quantity > 1000000:
+                        print("Please enter a number under the stock available.")
+                        continue
 
-        shopping_list.append((product, quantity))
-        print(f"Added {quantity} of {product.name} to your shopping list.")
+                shopping_list.append((product, quantity))
+                print(f"Added {quantity} of {product.name} to your shopping list.")
+                break
+            except ValueError:
+                print("Please enter an integer number higher than 0.")
 
     total_cost = 0
     for item, quantity in shopping_list:
@@ -134,11 +138,11 @@ def quit_program():
 
 def main():
     """ Main function that displays and handles user interface"""
-    best_buy = store.Store(product_list)
+    best_buy_store = store.Store(product_list)
     dispatch = {
-        "1": lambda: start(best_buy),
-        "2": lambda: show_total_quantity(best_buy),
-        "3": lambda: make_order(best_buy),
+        "1": lambda: start(best_buy_store),
+        "2": lambda: show_total_quantity(best_buy_store),
+        "3": lambda: make_order(best_buy_store),
         "4": quit_program
     }
 
