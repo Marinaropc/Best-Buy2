@@ -17,7 +17,7 @@ class Product:
             raise ValueError("Price cannot be negative.")
         if quantity < 0:
             raise ValueError("Quantity cannot be negative.")
-
+        self.promotion = None
         self.name = name
         self.price = price
         self.quantity = quantity
@@ -64,7 +64,8 @@ class Product:
         Returns:
             str: String representation of the product.
         """
-        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}\nPromotion: {self.promotion.name}"
+
 
 
     def buy(self, quantity):
