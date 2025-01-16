@@ -55,6 +55,8 @@ class SecondHalfPrice(Promotion):
         Args:
             product (Product): Product to apply the promotion to.
             quantity (int): Quantity of the product.
+        Returns:
+            float: total_price
         """
         if quantity < 2:
             return product.price * quantity
@@ -78,6 +80,8 @@ class ThirdOneFree(Promotion):
         Args:
             product (Product): Product to apply the promotion to.
             quantity (int): Quantity of the product.
+        Returns:
+            float: total_price
         """
         full_price = product.price * quantity
         if quantity < 2:
@@ -91,6 +95,7 @@ class ThirdOneFree(Promotion):
 
 class PercentDiscount(Promotion):
 
+
     def __init__(self, name, percent):
         """ Initializes a percent discount promotion with a name and a percent.
         Args:
@@ -100,14 +105,17 @@ class PercentDiscount(Promotion):
         super().__init__(name)
         self.percent = percent
 
+
     def apply_discount(self, product, quantity):
         """ Applies the promotion to a product.
         Args:
             product (Product): Product to apply the promotion to.
             quantity (int): Quantity of the product.
             percent (float): Percentage to discount.
+        Returns:
+            float: total_price
         """
         full_price = product.price * quantity
         discount = (full_price * self.percent)/100
-        new_price = full_price - discount
-        return new_price
+        total_price = full_price - discount
+        return total_price
