@@ -58,8 +58,7 @@ def make_order(best_buy):
     shopping_list = []
 
     for index, product in enumerate(active_products):
-        if product.is_active():
-            print(f"{index+1}. {product.show()}")
+        print(f"{index+1}. {product.show()}")
 
     print("-----")
     print ("When you want to finish order, enter an empty text.")
@@ -73,23 +72,29 @@ def make_order(best_buy):
             break
 
         try:
-            integer_product = int(product_number)
-            if integer_product <= 0:
-                print("Please enter a number higher than 0.")
+            product_index = int(product_number) - 1
+            if product_index < 0 or product_index >= len(active_products):
+                print("Please enter one of the displayed index number.")
                 continue
-            product_index = integer_product - 1
-            product = best_buy.get_all_products()[product_index]
+
+            product = active_products[product_index]
+            if isinstance(product, products.LimitedProduct):
+                already_ordered = any(p == product for p, _ in shopping_list)
+                if already_ordered:
+                    print("You can only purchase a LimitedProduct once.")
+                    continue
         except (ValueError, IndexError):
             print("Please enter one of the displayed index number.")
             continue
 
         print("How many do you want?")
         while True:
-            try:
-                string_quantity = input()
-                if not string_quantity.strip():
-                    break
 
+            string_quantity = input()
+            if not string_quantity.strip():
+                break
+
+            try:
                 quantity = int(string_quantity)
 
                 if quantity <= 0:
@@ -105,7 +110,6 @@ def make_order(best_buy):
                 if not isinstance(product, products.NonStockedProduct):
                     available_stock = product.get_quantity()
                     already_ordered = sum(q for p, q in shopping_list if p == product)
-
                     remaining_stock = available_stock - already_ordered
 
                     if remaining_stock <= 0:
@@ -115,6 +119,7 @@ def make_order(best_buy):
                     if quantity > remaining_stock:
                         print("Please enter a number lower than the quantity available.")
                         continue
+
                     elif quantity > 1000000:
                         print("Please enter a number under the stock available.")
                         continue
@@ -122,6 +127,7 @@ def make_order(best_buy):
                 shopping_list.append((product, quantity))
                 print(f"Added {quantity} of {product.name} to your shopping list.")
                 break
+
             except ValueError:
                 print("Please enter an integer number higher than 0.")
 

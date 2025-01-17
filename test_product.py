@@ -1,8 +1,6 @@
 import pytest
-import main
-import products
 from products import Product
-import store
+
 
 def test_empty_name():
     with pytest.raises(ValueError, match = "Name cannot be empty."):

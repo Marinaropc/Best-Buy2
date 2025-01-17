@@ -1,5 +1,4 @@
 
-
 class Product:
 
 
@@ -125,6 +124,12 @@ class NonStockedProduct(Product):
         """
         super().__init__(name, price, quantity = 0)
 
+    def show(self):
+        """ Returns a string representation of the product.
+        Returns:
+            str: String representation of the product.
+        """
+        return f"-{self.name}, Price: {self.price}\nPromotion: None\n"
 
     def set_quantity(self, quantity):
         """ Sets the quantity of the product. """
@@ -162,6 +167,14 @@ class LimitedProduct(Product):
         if maximum < 0:
             raise ValueError("Maximum quantity cannot be negative.")
         self.maximum = maximum
+
+    def show(self):
+        """ Returns a string representation of the product.
+        Returns:
+            str: String representation of the product.
+        """
+        super().show()
+        return f"-{self.name}, Price: {self.price}, Maximum per purchase: {self.maximum}\n"
 
 
     def get_maximum(self):

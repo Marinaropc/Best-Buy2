@@ -1,4 +1,3 @@
-import products
 
 class Store:
 
