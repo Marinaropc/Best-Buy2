@@ -20,6 +20,7 @@ product_list[0].set_promotion(second_half_price)
 product_list[1].set_promotion(third_one_free)
 product_list[3].set_promotion(thirty_percent)
 product_list[2].set_promotion(thirty_percent)
+
 # Initialize store
 best_buy = store.Store(product_list)
 
@@ -37,10 +38,8 @@ def user_input():
 def start(best_buy):
     """ Displays a list of all products in the store."""
     print(f"Here is the list of products in the store:\n")
-
     for item in best_buy.get_all_products():
         print(item.show())
-
     print("-----")
 
 
@@ -52,7 +51,6 @@ def show_total_quantity(best_buy):
 
 def make_order(best_buy):
     """ Displays the buying menu, and handles user input for making an order."""
-
     active_products = [product for product in
                        best_buy.get_all_products() if product.is_active()]
     shopping_list = []

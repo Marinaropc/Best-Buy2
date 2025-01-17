@@ -15,6 +15,7 @@ class Product:
             raise ValueError("Price cannot be negative.")
         if quantity < 0:
             raise ValueError("Quantity cannot be negative.")
+
         self.promotion = None
         self.name = name
         self.price = price
@@ -124,12 +125,14 @@ class NonStockedProduct(Product):
         """
         super().__init__(name, price, quantity = 0)
 
+
     def show(self):
         """ Returns a string representation of the product.
         Returns:
             str: String representation of the product.
         """
         return f"-{self.name}, Price: {self.price}\nPromotion: None\n"
+
 
     def set_quantity(self, quantity):
         """ Sets the quantity of the product. """
@@ -153,7 +156,9 @@ class NonStockedProduct(Product):
             total_price = self.promotion.apply_discount(self, quantity)
         return total_price
 
+
 class LimitedProduct(Product):
+
 
     def __init__(self, name, price, quantity, maximum):
         """ Initializes a limited product with a name, price, and quantity.
@@ -167,6 +172,7 @@ class LimitedProduct(Product):
         if maximum < 0:
             raise ValueError("Maximum quantity cannot be negative.")
         self.maximum = maximum
+
 
     def show(self):
         """ Returns a string representation of the product.
