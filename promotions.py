@@ -91,11 +91,10 @@ class PercentDiscount(Promotion):
             name (str): Name of the promotion.
             percent (int): Percent of the discount.
         """
+        super().__init__(name)
         if not (0 <= percent <= 100):
             raise ValueError("percentage must be between 0 and 100")
-        super().__init__(name)
         self.percent = percent
-
 
     def apply_discount(self, product, quantity):
         """ Applies the promotion to a product.

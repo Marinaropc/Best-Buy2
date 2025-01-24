@@ -45,8 +45,8 @@ class Store:
         """
         return self.products
 
-
-    def order(self, shopping_list):
+    @staticmethod
+    def order(shopping_list):
         """ Orders the products in the shopping list.
         Args:
             shopping_list (list): List of products to order.

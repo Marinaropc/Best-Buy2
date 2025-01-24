@@ -131,7 +131,8 @@ class NonStockedProduct(Product):
         Returns:
             str: String representation of the product.
         """
-        return f"-{self.name}, Price: {self.price}\nPromotion: None\n"
+        promotion_name = self.promotion.name if self.promotion else "None"
+        return f"-{self.name}, Price: {self.price}\nPromotion: {promotion_name} \n"
 
 
     def set_quantity(self, quantity):
