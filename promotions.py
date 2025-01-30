@@ -1,5 +1,4 @@
 
-
 class Promotion:
 
 
@@ -31,7 +30,7 @@ class Promotion:
 
 
 class SecondHalfPrice(Promotion):
-
+#docstring
     def __init__(self, name):
         """ Initializes a second half price promotion with a name.
         Args:
@@ -73,8 +72,8 @@ class ThirdOneFree(Promotion):
             float: total_price
         """
         full_price = product.price * quantity
-        if quantity < 2:
-            return full_price
+        if quantity <= 2:
+            return int(full_price)
 
         if quantity >= 3:
             how_many_free = quantity // 3
